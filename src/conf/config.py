@@ -1,0 +1,4 @@
+WIN_SIZE = (1280, 720)
+DIS_SIZE = (640, 360)
+
+REL_FPS = 60
