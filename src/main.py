@@ -4,6 +4,8 @@ import sys
 
 import conf.config as conf
 
+import game.player as player
+
 class Main:
     def __init__(self):
         self.window = pygame.display.set_mode(conf.WIN_SIZE)
@@ -12,14 +14,21 @@ class Main:
         self.dt = 0
         self.clock = pygame.time.Clock()
 
+        self.p = player.Player()
+
     def run(self):
         while 1:
+            self.dt = self.clock.tick(conf.REL_FPS) / 1000
+
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
 
-            self.dt = self.clock.tick(conf.REL_FPS) / 1000
+            self.p.update(self.dt)
+
+
+
             self.display.fill((0, 0, 0))
 
             
