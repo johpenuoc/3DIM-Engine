@@ -6,6 +6,8 @@ import conf.config as conf
 
 import game.player as player
 
+from engine.engine import Engine
+
 class Main:
     def __init__(self):
         self.window = pygame.display.set_mode(conf.WIN_SIZE)
@@ -15,6 +17,8 @@ class Main:
         self.clock = pygame.time.Clock()
 
         self.p = player.Player()
+
+        self.engine = Engine(self)
 
     def run(self):
         while 1:
@@ -31,7 +35,11 @@ class Main:
 
             self.display.fill((0, 0, 0))
 
-            
+            pygame.draw.rect(self.display, (255, 255, 255), (
+                self.p.pos[0] - 4, self.p.pos[1] - 4, 8, 8
+            ))
+
+            self.engine.trace_rays()
 
             self.window.blit(pygame.transform.scale(self.display, conf.WIN_SIZE), (0, 0))
             pygame.display.update()

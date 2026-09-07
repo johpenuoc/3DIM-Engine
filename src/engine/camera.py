@@ -1,14 +1,10 @@
 import pygame
-from math import sin, cos, degrees, asin, acos, sqrt
+from math import sin, cos, degrees, asin, radians, sqrt
 import conf.config as conf
 
 class Camera:
-    def __init_(self, pos, dir):
-        self.player_pos = pos
-        self.player_dir = dir
-
-        self.dim = [0, 0]
-        self.rays = []
+    def __init__(self):
+        #self.rays = {}
 
         # the camera works as such:
         #   the camera is a box projected onto a 3d plain
@@ -18,7 +14,7 @@ class Camera:
         #       so the ray length is the hypotenues and the fov is theta
         #   similarly, the width of the box is the same but on the other plain
         #   but because its a box, we know all sides are equal, so we only calculate one side length
-        s = sin(conf.FOV) * conf.RAY_LEN * 2
+        s = sin(radians(conf.FOV)) * conf.RAY_LEN * 2
         self.cam_size = s
 
     def pythag(self, a, b):
@@ -88,4 +84,4 @@ class Camera:
                     __x, y, z
                 ])
 
-        print(rays)
+        return rays

@@ -3,14 +3,17 @@ import pygame
 class Player:
     def __init__(self):
         # x, y, z
-        self.pos = [0, 0]
-        # x, y bearings
+        self.pos = [0, 0, 0]
+        # x, z bearings
         self.dir = [0, 0]
+
+        self.player_speed = 50
 
     def movement(self, dt):
         keys = pygame.key.get_pressed()
-        self.pos[0] += (keys[pygame.K_d] - keys[pygame.K_a]) * dt
-        self.pos[1] += (keys[pygame.K_s] - keys[pygame.K_w]) * dt
+        self.pos[0] += (keys[pygame.K_d] - keys[pygame.K_a]) * self.player_speed * dt
+        self.pos[1] += (keys[pygame.K_s] - keys[pygame.K_w]) * self.player_speed * dt
+        # going to add a jumping feature here in the future
 
     def direction(self, dt):
         keys = pygame.key.get_pressed()
@@ -24,5 +27,3 @@ class Player:
     def update(self, dt):
         self.movement(dt)
         self.direction(dt)
-
-        print(f'pos: {self.pos[:2]} | dir: {self.dir}')
