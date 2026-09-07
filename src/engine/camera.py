@@ -1,5 +1,5 @@
 import pygame
-from math import sin, cos
+from math import sin, cos, degrees, asin, acos, sqrt
 import conf.config as conf
 
 class Camera:
@@ -21,25 +21,71 @@ class Camera:
         s = sin(conf.FOV) * conf.RAY_LEN * 2
         self.cam_size = s
 
-    def initialise_rays(self):
-        # TOTAL rays to outline a box:
-        #   camera size + camera size - 1 + camera size - 1 + camera size - 2
-
+    def pythag(self, a, b):
+        return sqrt((a**2 + b**2))
+    
+    def collect_rays(self):
         # these are all the boxes inside the outlines box ('s')
         total_box_outline_rays = (self.cam_size * 4) - 4
-        total_box_fill_rays = [(total_box_outline_rays - (8 * i)) * (i + 1) for i in range(int(self.cam_size // 2) - 1)]
+        total_box_fill_rays = [total_box_outline_rays - (8 * i) for i in range(int(self.cam_size // 2) - 1)]
         if total_box_fill_rays[-1] == 8:
-            total_box_fill_rays.append(1)
-        sum_total_box_fill_rays = sum(total_box_fill_rays)
+            total_box_fill_rays.append(1) 
 
-        scattering = sum_total_box_fill_rays // conf.RAY_DEN
+        rays = {}
 
-        rays = []
-        # the four corners (of the box outline) and center ray are always drawn to provide basic function
-        top_left_x_axis = self.player_pos[0] - (sin(self.player_dir[0] - conf.FOV) * conf.RAY_LEN)
-        top_left_y_axis = self.player_pos[1] - (cos(self.player_dir[1] - conf.FOV) * conf.RAY_LEN)
-        top_left = [top_left_x_axis, top_left_y_axis]
+        for shift, total_points in enumerate(total_box_fill_rays):
+            total_rays = total_points / conf.RAY_DEN
+            jump = conf.RAY_DEN
+            box_side_len = int(total_points / (4 * conf.RAY_DEN))
 
-        for box_size in total_box_fill_rays:
-            for i in range(box_size // scattering):
-                pass
+            rays[str(shift)] = []
+
+            # top left to top right
+            _x = None
+            #print(shift, box_side_len)
+            for p in range(1, box_side_len + 1):
+                p = p * conf.RAY_DEN
+
+                x = (self.cam_size / 2) + shift + p
+                _x = x
+                y = conf.RAY_LEN
+                z = self.pythag(x, y) + shift
+                rays[str(shift)].append([
+                    x, y, z
+                ])
+
+            # top right to bottom right
+            _z = None
+            for p in range(1, box_side_len + 1):
+                p = p * conf.RAY_DEN
+
+                y = conf.RAY_LEN
+                z = self.pythag(x, y) + shift + p
+                _z = z
+                rays[str(shift)].append([
+                    _x, y, z
+                ])
+
+            # bottom right to bottom left
+            __x = None
+            for p in range(1, box_side_len + 1):
+                p = p * conf.RAY_DEN
+
+                x = _x - p
+                __x = x
+                y = conf.RAY_LEN
+                rays[str(shift)].append([
+                    x, y, _z
+                ])
+
+            # bottom left to top left
+            for p in range(1, box_side_len + 1):
+                p = p * conf.RAY_DEN
+
+                y = conf.RAY_LEN
+                z = _z - p
+                rays[str(shift)].append([
+                    __x, y, z
+                ])
+
+        print(rays)

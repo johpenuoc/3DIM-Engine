@@ -3,8 +3,8 @@ DIS_SIZE = (640, 360)
 
 REL_FPS = 60
 
-FOV = 60
-RAY_LEN = 20
-RAY_DEN = 50
+FOV = 30
+RAY_LEN = 10
+RAY_DEN = 1 # this is the total amount of rays needed to fill each pixel / RAY_DEN (so 2 is halving it)
 
 RENDERING_RES = 16
