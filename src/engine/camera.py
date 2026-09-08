@@ -19,9 +19,7 @@ class Camera:
 
     def angle_rays(self):
         total_box_outline_rays = (self.cam_size * 4) - 4
-        total_camera_ray_points = total_box_outline_rays / (2 / conf.RAY_DEN)
-
-        line_den = int(total_camera_ray_points / self.cam_size)
+        line_den = (self.cam_size * 2) / conf.RAY_DEN
         angle_jump = int(self.cam_size / line_den)
 
         init_angle = 360 - (conf.FOV / 2)
@@ -32,7 +30,7 @@ class Camera:
         rays = []
         for _ in range(int(self.cam_size)):
             x_theta = init_angle
-            for i in range(line_den):
+            for i in range(int(line_den)):
                 x_theta += angle_jump
                 x_theta %= 360
 
