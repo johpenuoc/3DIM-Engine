@@ -17,6 +17,32 @@ class Camera:
         s = sin(radians(conf.FOV)) * conf.RAY_LEN * 2
         self.cam_size = s
 
+    def angle_rays(self):
+        total_box_outline_rays = (self.cam_size * 4) - 4
+        total_camera_ray_points = total_box_outline_rays / (2 / conf.RAY_DEN)
+
+        line_den = int(total_camera_ray_points / self.cam_size)
+        angle_jump = int(self.cam_size / line_den)
+
+        init_angle = 360 - (conf.FOV / 2)
+        z_theta = init_angle
+
+        #print(self.cam_size, line_den, angle_jump)
+
+        rays = []
+        for _ in range(int(self.cam_size)):
+            x_theta = init_angle
+            for i in range(line_den):
+                x_theta += angle_jump
+                x_theta %= 360
+
+                rays.append([x_theta, z_theta])
+
+            z_theta += 1
+            z_theta %= 360
+
+        return rays
+
     def pythag(self, a, b):
         return sqrt((a**2 + b**2))
     

@@ -10,11 +10,11 @@ class Engine:
         self.main = Main
         self.camera = Camera()
 
-        self.rays = self.camera.collect_rays()
+        self.rays = self.camera.angle_rays()
 
     def angular_transformation(self, x_theta, z_theta):
-        x_theta = (x_theta + self.main.p.dir[0]) % 360
-        z_theta = (z_theta + self.main.p.dir[1]) % 360
+        x_theta = (x_theta +- self.main.p.dir[0] - (conf.FOV / .5)) % 360
+        z_theta = (z_theta + self.main.p.dir[1] - (conf.FOV / .5)) % 360
 
         # === everything below here is just some dumb maths to relate the 
         #     length of the z transformation to the length of the x and y
@@ -48,7 +48,7 @@ class Engine:
         cam_size = self.camera.cam_size
         #print(ppos)
 
-        for transform in self.rays['0'][:int(len(self.rays['0']) / 4)]:
+        for angle in self.rays[:16]:
             # these are the end points of each ray; relative to the player
             #thetas = transform[3]
             #x_theta = degrees(asin(x / y))
@@ -59,9 +59,9 @@ class Engine:
             #z = cam_size + ppos[2] - transform[2]
             #print('y pos: ', y)
 
-            x, y, z = self.angular_transformation(transform[0], transform[1])
+            x, y, z = self.angular_transformation(angle[0], angle[1])
 
-            ray = [ppos, (x, y, z)]
+            #ray = [ppos, (x, y, z)]
             
             pos = ppos[:2]
-            pygame.draw.line(self.main.display, (255, 0, 0), (pos[0], pos[1]), (pos[0] + x, pos[1] - y))
+            pygame.draw.line(self.main.display, (255, 0, 0), (pos[0], pos[1]), (pos[0] - x, pos[1] - y))
