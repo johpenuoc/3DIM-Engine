@@ -5,10 +5,12 @@ from math import degrees, asin, sin, cos, radians
 import conf.config as conf
 
 from engine.camera import Camera
+from engine.renderer import Renderer
 class Engine:
     def __init__(self, Main):
         self.main = Main
         self.camera = Camera()
+        self.renderer = Renderer()
 
         self.rays = self.camera.angle_rays()
 
@@ -38,7 +40,7 @@ class Engine:
         #pygame.draw.line(win, (255, 255, 255), (250, 250), (250 + x, 250 - y))
 
         # (x, y, z) are the positional information of the ray's end-point
-        return (x, y, z)
+        return [(x, y, z), l2]
 
     # not really tracing, i just didnt know what to call it
     def trace_rays(self):
@@ -48,6 +50,7 @@ class Engine:
         cam_size = self.camera.cam_size
         #print(ppos)
 
+        rays = []
         for angle in self.rays:
             # these are the end points of each ray; relative to the player
             #thetas = transform[3]
@@ -59,9 +62,25 @@ class Engine:
             #z = cam_size + ppos[2] - transform[2]
             #print('y pos: ', y)
 
-            x, y, z = self.angular_transformation(angle[0], angle[1])
+            (x, y, z), l2 = self.angular_transformation(angle[0], angle[1])
 
             #ray = [ppos, (x, y, z)]
             
             pos = ppos[:2]
             pygame.draw.line(self.main.display, (255, 0, 0), (pos[0], pos[1]), (pos[0] - x, pos[1] - y))
+
+            rays.append(((x, y, z), l2))
+
+        return rays
+
+    def draw(self):
+        rays = self.trace_rays()
+
+        for (x, y, z), l2 in rays:
+            pass
+        
+        self.renderer.render(
+            self.main.display, 
+            self.main.p.pos,
+            ray=0
+        )

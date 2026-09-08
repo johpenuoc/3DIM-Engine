@@ -9,3 +9,5 @@ RAY_LEN = 70
 RAY_DEN = 8 # this is the total amount of rays needed to fill each pixel / RAY_DEN (so 2 is halving it)
 
 RENDERING_RES = 16
+
+TILE_SIZE = 32

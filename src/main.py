@@ -39,7 +39,7 @@ class Main:
                 self.p.pos[0] - 4, self.p.pos[1] - 4, 8, 8
             ))
 
-            self.engine.trace_rays()
+            self.engine.draw()
 
             self.window.blit(pygame.transform.scale(self.display, conf.WIN_SIZE), (0, 0))
             pygame.display.update()
