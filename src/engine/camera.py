@@ -45,9 +45,14 @@ class Camera:
                 x = (self.cam_size / 2) + shift + p
                 _x = x
                 y = conf.RAY_LEN
-                z = self.pythag(x, y) + shift
+                z = self.pythag(self.pythag(x, y), (self.cam_size / 2) + shift)
+
+                z_adj = self.pythag(x, y)
+                x_theta = degrees(asin(x / z_adj))
+                z_theta = degrees(asin(z_adj / z))
+
                 rays[str(shift)].append([
-                    x, y, z
+                    x, y, z, [x_theta, 0, z_theta]
                 ])
 
             # top right to bottom right
@@ -56,10 +61,14 @@ class Camera:
                 p = p * conf.RAY_DEN
 
                 y = conf.RAY_LEN
-                z = self.pythag(x, y) + shift + p
+                z = self.pythag(self.pythag(_x, y), (self.cam_size / 2) + shift + p)
                 _z = z
+
+                z_adj = self.pythag(_x, y)
+                x_theta = degrees(asin(_x / z_adj))
+                z_theta = degrees(asin(z_adj / z))
                 rays[str(shift)].append([
-                    _x, y, z
+                    _x, y, z, [x_theta, 0, z_theta]
                 ])
 
             # bottom right to bottom left
@@ -70,8 +79,13 @@ class Camera:
                 x = _x - p
                 __x = x
                 y = conf.RAY_LEN
+
+                z_adj = self.pythag(x, y)
+                x_theta = degrees(asin(x / z_adj))
+                z_theta = degrees(asin(z_adj / _z))
+
                 rays[str(shift)].append([
-                    x, y, _z
+                    x, y, _z, [x_theta, 0, z_theta]
                 ])
 
             # bottom left to top left
@@ -80,8 +94,13 @@ class Camera:
 
                 y = conf.RAY_LEN
                 z = _z - p
+
+                z_adj = self.pythag(__x, y)
+                x_theta = degrees(asin(__x / z_adj))
+                z_theta = degrees(asin(z_adj / z))
+                
                 rays[str(shift)].append([
-                    __x, y, z
+                    __x, y, z, [x_theta, 0, z_theta]
                 ])
 
         return rays
