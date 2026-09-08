@@ -52,7 +52,7 @@ class Camera:
                 z_theta = degrees(asin(z_adj / z))
 
                 rays[str(shift)].append([
-                    x, y, z, [x_theta, 0, z_theta]
+                    x, y, z, [x_theta, z_theta]
                 ])
 
             # top right to bottom right
@@ -68,7 +68,7 @@ class Camera:
                 x_theta = degrees(asin(_x / z_adj))
                 z_theta = degrees(asin(z_adj / z))
                 rays[str(shift)].append([
-                    _x, y, z, [x_theta, 0, z_theta]
+                    _x, y, z, [x_theta, z_theta]
                 ])
 
             # bottom right to bottom left
@@ -85,7 +85,7 @@ class Camera:
                 z_theta = degrees(asin(z_adj / _z))
 
                 rays[str(shift)].append([
-                    x, y, _z, [x_theta, 0, z_theta]
+                    x, y, _z, [x_theta, z_theta]
                 ])
 
             # bottom left to top left
@@ -100,7 +100,7 @@ class Camera:
                 z_theta = degrees(asin(z_adj / z))
                 
                 rays[str(shift)].append([
-                    __x, y, z, [x_theta, 0, z_theta]
+                    __x, y, z, [x_theta, z_theta]
                 ])
 
         return rays

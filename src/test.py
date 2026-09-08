@@ -1,5 +1,5 @@
-import pygame
-from math import sin, cos, degrees, asin, acos, radians, sqrt
+import pygame, sys
+from math import sin, cos, degrees, asin, radians, sqrt, radians
 import conf.config as conf
 
 class Camera:
@@ -21,6 +21,49 @@ class Camera:
         s = sin(radians(conf.FOV)) * conf.RAY_LEN * 2
         self.cam_size = s
         print('s', s * 4 - 4)
+
+
+        # angular ray variables
+        self.dir = [0, 0]
+        self.ray = [0, 0]
+
+    def angular_ray(self, win, dt):
+        keys = pygame.key.get_pressed()
+        d0 = (keys[pygame.K_d] - keys[pygame.K_a]) * 15 * dt
+        d1 = (keys[pygame.K_s] - keys[pygame.K_w]) * 15 * dt
+
+        self.dir[0] += d0 * 70 * dt
+        self.dir[1] += d1 * 70 * dt
+        self.dir[0] %= 360# * (d0 if d0 != 0 and abs(int(self.dir[0])) >= 360 else 1)
+        self.dir[1] %= 360# * (d1 if d1 != 0 and abs(int(self.dir[1])) >= 360 else 1)
+
+
+        x_theta = (self.ray[0] + self.dir[0]) % 360
+        z_theta = (self.ray[1] + self.dir[1]) % 360
+
+        # === everything below here is just some dumb maths to relate the 
+        #     length of the z transformation to the length of the x and y
+        #     transformations ===
+
+        # z_theta can only be between 0 and 180
+        # because a head can only look up and down; we're not owls
+        z_transformation = sin(radians((z_theta + 90) % 360))
+        #print(z_transformation, z_theta)
+        l1 = conf.RAY_LEN * z_transformation
+        x = sin(radians(x_theta)) * l1
+        y = cos(radians(x_theta)) * l1
+
+        # l1 is the adjacent side on the z-axis
+        l2 = l1 / cos(radians(z_theta))
+        z = sin(radians(z_theta)) * l2
+
+        #print(f'{x_theta:.2f} | {z_theta:.2f}', [x, y, z])
+
+        # the line rotates and shinks upon an increased z_theta
+        #pygame.draw.line(win, (255, 255, 255), (250, 250), (250 + x, 250 - y))
+
+        
+        
 
     def pythag(self, a, b):
         return sqrt((a**2 + b**2))
@@ -179,4 +222,21 @@ class Camera:
             opp -= 1
 
 cam = Camera([0, 0, 0], [0, 0])
-cam.collect_rays()
+
+
+win = pygame.display.set_mode((500, 500))
+c = pygame.time.Clock()
+dt = 0
+
+while 1:
+    dt = c.tick(60) / 1000
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    win.fill((0, 0, 0))
+
+    cam.angular_ray(win, dt)
+
+    pygame.display.update()
