@@ -48,7 +48,7 @@ class Engine:
         cam_size = self.camera.cam_size
         #print(ppos)
 
-        for angle in self.rays[:16]:
+        for angle in self.rays:
             # these are the end points of each ray; relative to the player
             #thetas = transform[3]
             #x_theta = degrees(asin(x / y))
