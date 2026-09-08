@@ -13,8 +13,8 @@ class Engine:
         self.rays = self.camera.angle_rays()
 
     def angular_transformation(self, x_theta, z_theta):
-        x_theta = (x_theta +- self.main.p.dir[0] - (conf.FOV / .5)) % 360
-        z_theta = (z_theta + self.main.p.dir[1] - (conf.FOV / .5)) % 360
+        x_theta = (x_theta +- self.main.p.dir[0]) % 360
+        z_theta = (z_theta + self.main.p.dir[1]) % 360
 
         # === everything below here is just some dumb maths to relate the 
         #     length of the z transformation to the length of the x and y

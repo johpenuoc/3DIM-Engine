@@ -40,7 +40,7 @@ class Camera:
 
             z_theta += 1
             z_theta %= 360
-
+            
         return rays
 
     def pythag(self, a, b):
